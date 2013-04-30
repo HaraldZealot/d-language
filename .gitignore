@@ -2,5 +2,6 @@
 *.save
 *.cbp
 *.depend
+*.layout
 obj/
 bin/
