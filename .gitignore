@@ -1,0 +1,6 @@
+*.[oa]
+*.save
+*.cbp
+*.depend
+obj/
+bin/
