@@ -1,3 +1,4 @@
+
 *.[oa]
 *.save
 *.cbp
@@ -5,3 +6,7 @@
 *.layout
 obj/
 bin/
+Debug/
+Release/
+*.sln
+*.visuald*
