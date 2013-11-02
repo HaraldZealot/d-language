@@ -1,7 +1,6 @@
 
 *.[oa]
 *.save
-*.cbp
 *.depend
 *.layout
 obj/
