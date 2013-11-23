@@ -1,4 +1,4 @@
-import std.stdio;
+import std.stdio, std.algorithm;
 
 void main()
 {
@@ -6,6 +6,8 @@ void main()
     Point b = {0.8125, 2};
     Point c = {1.5625, 3};
     writeln("calcparabola(", a, ", ", b, ", ", c, ") =\n", calcParabola(a, b, c));
+    writeln("calcLine(", a, ", ", b, ") =\n",calcLine(a,b));
+
 }
 
 struct Point
@@ -54,4 +56,28 @@ unittest
     assert([1.0L, 3.0L] == calcLine(Point(0.0L, 1.0L), Point(1.0L, 4.0L)), "line test failed");
     assert([2.0L, -1.0L] == calcLine(Point(0.0L, 2.0L), Point(1.0L, 1.0L)), "line test failed");
     assert([1.0L, 1.0L/3.0L] == calcLine(Point(0.0L, 1.0L), Point(3.0L, 2.0L)), "line test failed");
+}
+
+real[2] medianLine(Point[] points)
+{
+    real[2][] coeficients=new real[2][0];
+
+    for(auto i=0; i<points.length; ++i)
+        for(auto j=i + 1; j<points.length; ++j)
+            coeficients ~= calcLine(points[i], points[j]);
+
+    typeof(return) result;
+    writeln(coeficients);
+    sort!("a[0]<b[0]")(coeficients);
+    result[0] = coeficients[$/2][0];
+    writeln(coeficients);
+    sort!("a[1]<b[1]")(coeficients);
+    result[1] = coeficients[$/2][1];
+    writeln(coeficients);
+    return result;
+}
+
+unittest
+{
+    writeln(medianLine([Point(1,2),Point(3,4),Point(4,6)]));
 }
