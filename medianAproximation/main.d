@@ -67,17 +67,20 @@ real[2] medianLine(Point[] points)
             coeficients ~= calcLine(points[i], points[j]);
 
     typeof(return) result;
-    writeln(coeficients);
     sort!("a[0]<b[0]")(coeficients);
     result[0] = coeficients[$/2][0];
-    writeln(coeficients);
     sort!("a[1]<b[1]")(coeficients);
     result[1] = coeficients[$/2][1];
-    writeln(coeficients);
     return result;
 }
 
 unittest
 {
-    writeln(medianLine([Point(1,2),Point(3,4),Point(4,6)]));
+    assert(calcLine(Point(1,2), Point(2,3)) == medianLine([Point(1,2), Point(2,3)]),"unique line test failed");
+    Point[] points=[Point(1,2), Point(2,3), Point(3,4), Point(4,5), Point(5,6), Point(6,7), Point(7,8)];
+    assert([1.0L, 1.0L] == medianLine(points), "single line test failed");
+    points[1] = Point(2,2);
+    assert([1.0L, 1.0L] == medianLine(points), "one error point test failed");
+    points[1] = Point(2,2000);
+    assert([1.0L, 1.0L] == medianLine(points), "one error point test failed");
 }
