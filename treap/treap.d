@@ -24,7 +24,7 @@ struct Treap(Data)
             static assert(0, "Treap alows only comparable data");
 
         foreach(e ; arr)
-        insert(e);
+	    insert(e);
     }
     void insert(Data val)
     {
