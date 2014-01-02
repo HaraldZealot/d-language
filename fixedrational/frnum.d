@@ -34,14 +34,40 @@ struct frnum //fixed rational numbers 4 byte
 
     string toString()
     {
-        import std.conv;
-        string result = to!string(model>>15);
-        if(0x7F_FF & model)
+        import std.stdio;
+        string result;
+        auto innerModel = model;
+
+        if(innerModel < 0)
         {
-            auto tail = 0x7F_FF & (model < 0? -model : model);
-            auto decimalTail = (tail * 100000) / (1<<15);
+            result ~= "-";
+            innerModel = -innerModel;
+        }
+
+        auto head = innerModel >>> 15;
+        auto tail = 0x7F_FF & innerModel;
+        //writefln("h = %s\nt = %s", head, tail);
+        auto carier = 10;
+
+        while(head / carier)
+            carier *= 10;
+
+        carier /= 10;
+
+        for(auto i = carier; i != 0; i /=10)
+        {
+            auto digit = head / i;
+            result ~= cast(char)('0' + digit);
+            head -= digit * i;
+        }
+
+        if(tail)
+        {
+            uint decimalTail = (tail * 100000U) / (1 << 15);
+            //writefln("dt = %s", decimalTail);
             result ~= ".";
             string temporal;
+
             for(auto i = 10000; i != 0; i /=10)
             {
                 auto digit = decimalTail / i;
@@ -56,8 +82,6 @@ struct frnum //fixed rational numbers 4 byte
 
                 decimalTail -= digit * i;
             }
-             //~ to!string((tail * 100000) / (1<<15));
-            //result ~= to!string(() / cast(real) (1 << 15))[1..$];
         }
         return result;
     }
@@ -67,16 +91,10 @@ unittest
 {
     import std.stdio;
     frnum a = -5;
-    writefln("%b", a.model);
-    writefln("%d", a.model);
-    writefln("%X", a.model);
-    frnum b = 5;
-    writefln("%b", b.model);
-    writefln("%d", b.model);
-    writefln("%X", b.model);
-    writefln("a-b=%s",(a-b));
-    frnum c = 1;
+    frnum b = 6;
+    writefln("%s + %s = %s",a, b, a + b);
+    frnum c = 12;
     frnum d;
-    d.model = 10922;
-    writefln("%s",c*d);
+    d.model = 10923;
+    writefln("%s", c * d);
 }
