@@ -12,6 +12,8 @@
 				<Option type="1" />
 				<Option compiler="gdc" />
 				<Compiler>
+					<Add option="-funittest" />
+					<Add option="-fdebug" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -31,7 +33,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="hello.d" />
+		<Unit filename="frnum.d" />
+		<Unit filename="main.d" />
 		<Extensions>
 			<code_completion />
 			<envvars />
