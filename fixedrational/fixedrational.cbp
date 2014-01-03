@@ -4,16 +4,16 @@
 	<Project>
 		<Option title="fixedrational" />
 		<Option pch_mode="2" />
-		<Option compiler="gdc" />
+		<Option compiler="ldc" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/fixedrational" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="gdc" />
+				<Option compiler="ldc" />
 				<Compiler>
-					<Add option="-funittest" />
-					<Add option="-fdebug" />
+					<Add option="-unittest" />
+					<Add option="-w" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -21,19 +21,16 @@
 				<Option output="bin/Release/fixedrational" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
-				<Option compiler="gdc" />
+				<Option compiler="ldc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-march=x86-64" />
+					<Add option="-O3" />
+					<Add option="-release" />
+					<Add option="-enable-inlining" />
 				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
 			</Target>
 		</Build>
-		<Compiler>
-			<Add option="-Wall" />
-		</Compiler>
-		<Unit filename="frnum.d" />
+		<Unit filename="fixed.d" />
 		<Unit filename="main.d" />
 		<Extensions>
 			<code_completion />
