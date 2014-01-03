@@ -39,7 +39,7 @@ struct fixed //fixed rational numbers 4 byte
     this(int value) pure nothrow @safe
     {
         auto sign = 0x80_00_00_00 & value;
-        model = sign | (value & 0xFF_FF) << 15;
+        model = sign | (value & 0x7F_FF) << 16;
     }
 
     fixed opUnary(string op)() const pure nothrow @safe
@@ -76,9 +76,9 @@ struct fixed //fixed rational numbers 4 byte
         auto a = lhs.model < 0 ? -lhs.model : lhs.model;
         auto b = rhs.model < 0 ? -rhs.model : rhs.model;
         fixed result;
-        result.model = ((a & 0x7F_FF) * (b & 0x7F_FF)) >>> 15;
-        result.model += (a >>> 15) * (b & 0x7F_FF) + (a & 0x7F_FF) * (b >>> 15);
-        result.model += (0xFF_FF & ((a >>> 15) * (b >>> 15))) << 15;
+        result.model = ((a & 0xFF_FF) * (b & 0xFF_FF)) >>> 16;
+        result.model += (a >>> 16) * (b & 0xFF_FF) + (a & 0xFF_FF) * (b >>> 16);
+        result.model += (0x7F_FF & ((a >>> 16) * (b >>> 16))) << 16;
 
         if(sign)
             result.model = -result.model;
@@ -102,8 +102,8 @@ struct fixed //fixed rational numbers 4 byte
         if(innerModel == fixed.infinity.model)
             return result ~ "inf";
 
-        auto head = innerModel >>> 15;
-        auto tail = 0x7F_FF & innerModel;
+        auto head = innerModel >>> 16;
+        auto tail = 0xFF_FF & innerModel;
         auto carier = 10;
 
         while(head / carier)
@@ -120,7 +120,7 @@ struct fixed //fixed rational numbers 4 byte
 
         if(tail)
         {
-            uint decimalTail = (tail * 100000U) / (1 << 15);
+            uint decimalTail = (tail * 100000U) / (1 << 16);
             result ~= ".";
             string temporal;
 
@@ -221,9 +221,9 @@ unittest
     fixed a = -5;
     fixed b = 6;
     writefln("%s + %s = %s",a, b, a + b);
-    fixed c = -12;
+    fixed c = -3;//-12;
     fixed d;
-    d.model = 10923;
+    d.model = 65536/3;
     writefln("%s", c * d);
     writeln(" nan: ", fixed.nan);
     writeln(" inf: ", fixed.infinity);
