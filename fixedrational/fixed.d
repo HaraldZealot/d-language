@@ -53,7 +53,7 @@ struct fixed //fixed rational numbers 4 byte
     fixed opBinary(string op)(fixed rhs) const pure nothrow @safe
     {
         alias this lhs;
-        if(isnan(lhs) || isnan(rhs))
+        if(isNaN(lhs) || isNaN(rhs))
             return fixed.nan;
 
         return opBinaryImpl!op(rhs);
@@ -88,7 +88,7 @@ struct fixed //fixed rational numbers 4 byte
 
     string toString() const pure nothrow @safe
     {
-        if(isnan(this))
+        if(isNaN(this))
             return "nan";
         string result;
         int innerModel = model;
@@ -143,50 +143,75 @@ struct fixed //fixed rational numbers 4 byte
     }
 }
 
-bool isnan(fixed value) pure nothrow @safe
+bool isNaN(fixed value) pure nothrow @safe
 {
     return value.model == 0x80_00_00_00;
+}
+
+bool isInfinity(fixed value) pure nothrow @safe
+{
+    return 0x7F_FF_FF_FF == value.model || 0x80_00_00_01 == value.model;
 }
 
 //nan test
 unittest
 {
-    assert(isnan(fixed.nan));
-    assert(isnan(fixed.init));
-    assert(!isnan(fixed(0)));
-    assert(!isnan(fixed(23)));
-    assert(!isnan(fixed(-44)));
-    assert(!isnan(fixed.epsilon));
-    assert(!isnan(fixed.infinity));
-    assert(!isnan(fixed.min));
-    assert(!isnan(fixed.max));
+    assert(isNaN(fixed.nan));
+    assert(isNaN(fixed.init));
+    assert(!isNaN(fixed(0)));
+    assert(!isNaN(fixed(23)));
+    assert(!isNaN(fixed(-44)));
+    assert(!isNaN(fixed.epsilon));
+    assert(!isNaN(fixed.infinity));
+    assert(!isNaN(fixed.min));
+    assert(!isNaN(fixed.max));
 
-    assert(isnan(+fixed.nan));
-    assert(!isnan(+fixed(0)));
-    assert(!isnan(+fixed(23)));
-    assert(!isnan(+fixed(-44)));
-    assert(!isnan(+fixed.epsilon));
-    assert(!isnan(+fixed.infinity));
-    assert(!isnan(+fixed.min));
-    assert(!isnan(+fixed.max));
+    assert(isNaN(+fixed.nan));
+    assert(!isNaN(+fixed(0)));
+    assert(!isNaN(+fixed(23)));
+    assert(!isNaN(+fixed(-44)));
+    assert(!isNaN(+fixed.epsilon));
+    assert(!isNaN(+fixed.infinity));
+    assert(!isNaN(+fixed.min));
+    assert(!isNaN(+fixed.max));
 
-    assert(isnan(-fixed.nan));
-    assert(!isnan(-fixed(0)));
-    assert(!isnan(-fixed(23)));
-    assert(!isnan(-fixed(-44)));
-    assert(!isnan(-fixed.epsilon));
-    assert(!isnan(-fixed.infinity));
-    assert(!isnan(-fixed.min));
-    assert(!isnan(-fixed.max));
+    assert(isNaN(-fixed.nan));
+    assert(!isNaN(-fixed(0)));
+    assert(!isNaN(-fixed(23)));
+    assert(!isNaN(-fixed(-44)));
+    assert(!isNaN(-fixed.epsilon));
+    assert(!isNaN(-fixed.infinity));
+    assert(!isNaN(-fixed.min));
+    assert(!isNaN(-fixed.max));
 
-    assert(isnan(fixed.nan + fixed(13)));
-    assert(isnan(fixed(17) + fixed.nan));
-    assert(isnan(fixed.nan + fixed.nan));
-    assert(!isnan(fixed(17) + fixed(13)));
-    assert(isnan(fixed.nan - fixed(13)));
-    assert(isnan(fixed(17) - fixed.nan));
-    assert(isnan(fixed.nan - fixed.nan));
-    assert(!isnan(fixed(17) - fixed(13)));
+    assert(isNaN(fixed.nan + fixed(13)));
+    assert(isNaN(fixed(17) + fixed.nan));
+    assert(isNaN(fixed.nan + fixed.nan));
+    assert(!isNaN(fixed(17) + fixed(13)));
+    assert(isNaN(fixed.nan - fixed(13)));
+    assert(isNaN(fixed(17) - fixed.nan));
+    assert(isNaN(fixed.nan - fixed.nan));
+    assert(!isNaN(fixed(17) - fixed(13)));
+    assert(isNaN(fixed.nan * fixed(13)));
+    assert(isNaN(fixed(17) * fixed.nan));
+    assert(isNaN(fixed.nan * fixed.nan));
+    assert(!isNaN(fixed(17) * fixed(13)));
+}
+
+//infinity test
+unittest
+{
+    assert(isInfinity(fixed.infinity));
+    assert(isInfinity(-fixed.infinity));
+    assert(!isInfinity(fixed(0)));
+    assert(!isInfinity(fixed(23)));
+    assert(!isInfinity(fixed(-44)));
+    assert(!isInfinity(fixed.epsilon));
+    assert(!isInfinity(fixed.nan));
+    assert(!isInfinity(fixed.init));
+    assert(!isInfinity(fixed.min));
+    assert(!isInfinity(fixed.max));
+
 }
 
 //pseudo main
@@ -206,4 +231,16 @@ unittest
     writeln(" min: ", fixed.min);
     writeln(" max: ", fixed.max);
     writeln(" epsilon: ", fixed.epsilon());
+
+    writeln("\nfloat");
+    writefln("%s + %s = %s", float.infinity, float.infinity, float.infinity + float.infinity);
+    writefln("%s - %s = %s", float.infinity, float.infinity, float.infinity - float.infinity);
+    writefln("%s * %s = %s", float.infinity, float.infinity, float.infinity * float.infinity);
+    writefln("%s / %s = %s", float.infinity, float.infinity, float.infinity / float.infinity);
+
+    writefln("%s + %s = %s", float.max, float.max, float.max + float.max);
+    writefln("%s - %s = %s", float.max, float.max, float.max - float.max);
+    writefln("%s * %s = %s", float.max, float.max, float.max * float.max);
+    writefln("%s / %s = %s", float.max, float.max, float.max / float.max);
+
 }
