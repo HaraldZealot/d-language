@@ -93,7 +93,6 @@ struct fixed //fixed rational numbers 4 byte
     private fixed opBinaryImpl(string op)(fixed rhs) const pure nothrow @safe
         if(op == "/")
     {
-        //import core.stdc.stdlib;
         alias this lhs;
 
         // division by zero
@@ -136,9 +135,9 @@ struct fixed //fixed rational numbers 4 byte
 
         uint currentReminder = cast(uint) first.rem << 1;
         auto currentBit = 1 << 15;
-        while(currentBit)
+        while(currentBit && currentReminder)
         {
-            if(currentReminder > b)
+            if(currentReminder >= b)
             {
                 result.model |= currentBit;
                 currentReminder -= b;
@@ -274,6 +273,11 @@ unittest
     assert(isNaN(fixed(17) * fixed.nan));
     assert(isNaN(fixed.nan * fixed.nan));
     assert(!isNaN(fixed(17) * fixed(13)));
+    assert(isNaN(fixed.nan / fixed(13)));
+    assert(isNaN(fixed(17) / fixed.nan));
+    assert(isNaN(fixed.nan / fixed.nan));
+    assert(!isNaN(fixed(17) / fixed(13)));
+    assert(isNaN(fixed(0) / fixed(0)));
 }
 
 //infinity test
@@ -302,7 +306,7 @@ unittest
     fixed c = -12;
     fixed d;
     d.model = 65536/3;
-    writefln("%s", fixed(-12) / fixed(24));
+    writefln("%s", fixed(3)*(fixed(-1) / fixed(3)));
     writeln(" nan: ", fixed.nan);
     writeln(" inf: ", fixed.infinity);
     writeln("-inf: ", -fixed.infinity);
