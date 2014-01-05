@@ -90,6 +90,66 @@ struct fixed //fixed rational numbers 4 byte
         return result;
     }
 
+    private fixed opBinaryImpl(string op)(fixed rhs) const pure nothrow @safe
+        if(op == "/")
+    {
+        //import core.stdc.stdlib;
+        alias this lhs;
+
+        // division by zero
+        if(!rhs.model)
+        {
+            if(lhs.model > 0)
+                return fixed.infinity;
+            else if(lhs.model == 0)
+                return fixed.nan;
+            else
+                return -fixed.infinity;
+        }
+
+        // division by infinity
+        if(isInfinity(rhs))
+        {
+            if(isInfinity(lhs))
+                return fixed.nan;
+            else
+                return fixed(0);
+        }
+
+        fixed result;
+
+        auto sign = (0x80_00_00_00 & lhs.model) ^ (0x80_00_00_00 & rhs.model);
+        scope(exit)
+        {
+            if(sign)
+                result = -result;
+        }
+
+        uint a = lhs.model < 0 ? -lhs.model : lhs.model;
+        uint b = rhs.model < 0 ? -rhs.model : rhs.model;
+
+        auto first = div(a, b);
+        if(first.quot >> 15)
+            return fixed.infinity;
+
+        result.model = first.quot << 16;
+
+        uint currentReminder = cast(uint) first.rem << 1;
+        auto currentBit = 1 << 15;
+        while(currentBit)
+        {
+            if(currentReminder > b)
+            {
+                result.model |= currentBit;
+                currentReminder -= b;
+            }
+            currentReminder <<= 1;
+            currentBit >>>= 1;
+        }
+
+        return result;
+    }
+
     string toString() const pure nothrow @safe
     {
         if(isNaN(this))
@@ -157,6 +217,19 @@ bool isInfinity(fixed value) pure nothrow @safe
     return 0x7F_FF_FF_FF == value.model || 0x80_00_00_01 == value.model;
 }
 
+struct div_t
+{
+    uint quot, rem;
+}
+
+div_t div(uint a, uint b) pure nothrow @safe
+{
+    // TODO asm
+    div_t result;
+    result.quot = a / b;
+    result.rem = a % b;
+    return result;
+}
 
 //nan test
 unittest
@@ -229,7 +302,7 @@ unittest
     fixed c = -12;
     fixed d;
     d.model = 65536/3;
-    writefln("%s", c * d);
+    writefln("%s", fixed(-12) / fixed(24));
     writeln(" nan: ", fixed.nan);
     writeln(" inf: ", fixed.infinity);
     writeln("-inf: ", -fixed.infinity);
