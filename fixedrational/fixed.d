@@ -293,7 +293,10 @@ unittest
     assert(!isInfinity(fixed.init));
     assert(!isInfinity(fixed.min));
     assert(!isInfinity(fixed.max));
-
+    assert(isInfinity(fixed.max / fixed.epsilon));
+    assert(isInfinity(fixed(100) / fixed.epsilon));
+    assert(isInfinity(fixed.min / fixed.epsilon));
+    assert(fixed(0) == fixed(1) / fixed.infinity);
 }
 
 //pseudo main
