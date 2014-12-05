@@ -10,11 +10,24 @@ void main()
 
 }
 
+/** @struct Point
+    @brief Simple 2D point
+*/
+
 struct Point
 {
     real x;
     real y;
 }
+
+/** @fn calcParabola
+    @brief Calculate quotient of parabola that leads throught three points.
+
+    @param [in] pm is previous point
+    @param [in] p0 is central point
+    @param [in] pp is next point
+    @return array of 3 real qoutient. a[2]*x^2+a[1]*x+a[0].
+*/
 
 real[3] calcParabola(Point pm, Point p0, Point pp)
 {
