@@ -55,90 +55,97 @@ struct Stackpletron
 
 	public void run()
 	{
-		do{
-			extract();
-			final switch(cast(OperationCode)operandRegister)
-			{
-				case OperationCode.READ:
-					write("input:  ");
-					readf(" %d", &memory[addressRegister + biasRegister]);
-					break;
-				case OperationCode.WRITE:
-					writefln("\noutput: %+05d", memory[addressRegister + biasRegister]);
-					break;
+		try{
+			do{
+				extract();
+				final switch(cast(OperationCode)operandRegister)
+				{
+					case OperationCode.READ:
+						write("input:  ");
+						readf(" %d", &memory[addressRegister + biasRegister]);
+						break;
+					case OperationCode.WRITE:
+						writefln("\noutput: %+05d", memory[addressRegister + biasRegister]);
+						break;
 
-				case OperationCode.LOAD:
-					accumulatorRegister = memory[addressRegister + biasRegister];
-					break;
-				case OperationCode.STORE:
-					memory[addressRegister + biasRegister] = accumulatorRegister;
-					break;
-				case OperationCode.LOADTOP:
-					accumulatorRegister = stackTopRegister;
-					break;
-				case OperationCode.STORETOP:
-					stackTopRegister = accumulatorRegister;
-					break;
-				case OperationCode.LOADBIAS:
-					accumulatorRegister = biasRegister;
-					break;
-				case OperationCode.STOREBIAS:
-					biasRegister = accumulatorRegister;
-					break;
-				case OperationCode.PUSH:
-					memory[--stackTopRegister] = accumulatorRegister;
-					break;
-				case OperationCode.POP:
-					accumulatorRegister = memory[stackTopRegister++];
-					break;
+					case OperationCode.LOAD:
+						accumulatorRegister = memory[addressRegister + biasRegister];
+						break;
+					case OperationCode.STORE:
+						memory[addressRegister + biasRegister] = accumulatorRegister;
+						break;
+					case OperationCode.LOADTOP:
+						accumulatorRegister = stackTopRegister;
+						break;
+					case OperationCode.STORETOP:
+						stackTopRegister = accumulatorRegister;
+						break;
+					case OperationCode.LOADBIAS:
+						accumulatorRegister = biasRegister;
+						break;
+					case OperationCode.STOREBIAS:
+						biasRegister = accumulatorRegister;
+						break;
+					case OperationCode.PUSH:
+						memory[--stackTopRegister] = accumulatorRegister;
+						break;
+					case OperationCode.POP:
+						accumulatorRegister = memory[stackTopRegister++];
+						break;
 
-				case OperationCode.ADD:
-					accumulatorRegister += memory[addressRegister + biasRegister];
-					break;
-				case OperationCode.SUBSTRACT:
-					accumulatorRegister -= memory[addressRegister + biasRegister];
-					break;
-				case OperationCode.DIVIDE:
-					accumulatorRegister /= memory[addressRegister + biasRegister];
-					break;
-				case OperationCode.MULTIPLY:
-					accumulatorRegister *= memory[addressRegister + biasRegister];
-					break;
-				case OperationCode.LITERAL:
-					accumulatorRegister = addressRegister;
-					break;
+					case OperationCode.ADD:
+						accumulatorRegister += memory[addressRegister + biasRegister];
+						break;
+					case OperationCode.SUBSTRACT:
+						accumulatorRegister -= memory[addressRegister + biasRegister];
+						break;
+					case OperationCode.DIVIDE:
+						accumulatorRegister /= memory[addressRegister + biasRegister];
+						break;
+					case OperationCode.MULTIPLY:
+						accumulatorRegister *= memory[addressRegister + biasRegister];
+						break;
+					case OperationCode.LITERAL:
+						accumulatorRegister = addressRegister;
+						break;
 
-				case OperationCode.BRANCH:
-					instructionRegister = cast(short)(addressRegister - 1);
-					break;
-				case OperationCode.BRANCHNEG:
-					if(accumulatorRegister < 0)
+					case OperationCode.BRANCH:
 						instructionRegister = cast(short)(addressRegister - 1);
-					break;
-				case OperationCode.BRANCHZERO:
-					if(accumulatorRegister == 0)
+						break;
+					case OperationCode.BRANCHNEG:
+						if(accumulatorRegister < 0)
+							instructionRegister = cast(short)(addressRegister - 1);
+						break;
+					case OperationCode.BRANCHZERO:
+						if(accumulatorRegister == 0)
+							instructionRegister = cast(short)(addressRegister - 1);
+						break;
+					case OperationCode.HALT:
+						--instructionRegister;
+						break;
+					case OperationCode.CALL:
+						memory[--stackTopRegister] = instructionRegister;
 						instructionRegister = cast(short)(addressRegister - 1);
-					break;
-				case OperationCode.HALT:
-					--instructionRegister;
-					break;
-				case OperationCode.CALL:
-					memory[--stackTopRegister] = instructionRegister;
-					instructionRegister = cast(short)(addressRegister - 1);
-					break;
-				case OperationCode.RETURN:
-					instructionRegister = memory[stackTopRegister++];
-					foreach(unused;0..addressRegister)
-						stackTopRegister++;
-					break;
-			}
-			++instructionRegister;
-		}while(operandRegister != OperationCode.HALT);
-		writeln("\nStackpletron has succecfully finished\n");
-		printDump();
+						break;
+					case OperationCode.RETURN:
+						instructionRegister = memory[stackTopRegister++];
+						foreach(unused;0..addressRegister)
+							stackTopRegister++;
+						break;
+				}
+				++instructionRegister;
+			}while(operandRegister != OperationCode.HALT);
+			writeln("\nStackpletron has succecfully finished\n");
+			printDump();
+		}catch(Throwable e)
+		{
+			writefln("An error \"%s\" has occured", e.msg);
+			printDump;
+		}
 	}
 
-	private void extract()pure nothrow @safe
+
+	private void extract()pure nothrow @safe @nogc
 	{
 		short currentCode = memory[instructionRegister];
 		if(currentCode < 0)
