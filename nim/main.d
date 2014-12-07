@@ -27,8 +27,8 @@ void main()
 		}while(levelChoise<1 || levelChoise>4);
 		auto levelToHeap =[1:3, 2:5, 3:6, 4:10];
 
-		auto heap = generateHeaps(levelToHeap[levelChoise]);
-		outputHeaps(heap);
+		auto heaps = generateHeaps(levelToHeap[levelChoise]);
+		outputHeaps(heaps);
 
 	}
 	catch(Exception e)
@@ -39,26 +39,34 @@ void main()
 
 int[] generateHeaps(int count)
 {
-	auto heap = new int[count];
+	auto heaps = new int[count];
 	auto nimSum = 0;
-	for(auto i=0;i<heap.length-1;++i)
+	for(auto i = 0; i < heaps.length - 1; ++i)
 	{
-		heap[i]=uniform(1,20);
-		nimSum ^= heap[i];
+		heaps[i] = uniform(1,32);
+		nimSum ^= heaps[i];
 	}
-	writeln("sum: ", nimSum);
-	return heap;
+	for(auto i = 0; i<3; ++i)
+	{
+		nimSum ^= 1 << uniform(0,5);
+	}
+	while(!nimSum)
+	{
+		nimSum ^= 1 << uniform(0,5);
+	}
+	heaps[$-1] = nimSum;
+	return heaps;
 }
 
-void outputHeaps(int[] heap)
+void outputHeaps(int[] heaps)
 {
 	writeln("\nStones in heaps");
-	for(auto i=0;i<heap.length;++i)
+	for(auto i=0;i<heaps.length;++i)
 	{
-		writef("%3d ", heap[i]);
+		writef("%3d ", heaps[i]);
 	}
 	writeln();
-	for(auto i=0;i<heap.length;++i)
+	for(auto i=0;i<heaps.length;++i)
 	{
 		writef("  %c ", cast(char)('A' + i));
 	}
