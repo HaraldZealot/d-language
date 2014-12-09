@@ -12,24 +12,9 @@ void main()
 		writeln("The two player take any possible amount (at least one)\nof stone per turn from any heaps.");
 		writeln("Player who takes last stones on the tables win.");
 
-		writeln("\n\n\nLet start! Select level of computer opponent:\n1. wise\n2. fool");
-		auto intelegentChoise = 0;
-		do{
-			readf(" %s", &intelegentChoise);
-			if(intelegentChoise != 1 && intelegentChoise != 2)
-				stderr.writeln("only 1 or 2 is possible");
-		}while(intelegentChoise != 1 && intelegentChoise != 2);
+		writeln("\n\n\nLet start!"); 
 
-		writeln("\nSelect level of game:\n1. Easy\n2. Normal\n3. Hard\n4. Very Hard");
-		auto levelChoise=0;
-		do{
-			readf(" %s", &levelChoise);
-			if(levelChoise<1 || levelChoise>4)
-				stderr.writeln("only number between 1 and 4 is possible");
-		}while(levelChoise<1 || levelChoise>4);
-		auto levelToHeap =[1:3, 2:5, 3:6, 4:10];
-
-		auto heaps = generateHeaps(levelToHeap[levelChoise]);
+		auto heaps = generateHeaps(3);
 
 		auto turn = 0;// human
 		do
@@ -154,13 +139,6 @@ bool canTurn(int[] heaps)
 	return false;
 }
 
-unittest
-{
-	assert(5==countOfBits(31));
-	assert(5==countOfBits(32));
-	assert(6==countOfBits(33));
-}
-
 int countOfBits(int number)
 {
 	int count = 0, representation=1;
@@ -171,4 +149,3 @@ int countOfBits(int number)
 	}
 	return count;
 }
-
