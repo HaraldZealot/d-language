@@ -2,7 +2,7 @@
 
 import std.stdio, std.conv, std.random;
 
-immutable int maxStones = 32;
+immutable int maxStones = 8;
 
 void main()
 {
@@ -132,7 +132,7 @@ void computerTurn(int[] heaps)
 	if(nimSum)
 	{
 		auto index = 0;
-		while(heaps[index] >= (heaps[index] ^ nimSum))
+		while(heaps[index] <= (heaps[index] ^ nimSum))
 			++index;
 		heaps[index] ^= nimSum;
 	}
@@ -154,10 +154,17 @@ bool canTurn(int[] heaps)
 	return false;
 }
 
+unittest
+{
+	assert(5==countOfBits(31));
+	assert(5==countOfBits(32));
+	assert(6==countOfBits(33));
+}
+
 int countOfBits(int number)
 {
 	int count = 0, representation=1;
-	while(representation <= number)
+	while(representation < number)
 	{
 		representation <<= 1;
 		++count;
