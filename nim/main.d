@@ -45,21 +45,10 @@ void main()
 int[] generateHeaps(int count)
 {
 	auto heaps = new int[count];
-	auto nimSum = 0;
-	for(auto i = 0; i < heaps.length - 1; ++i)
+	for(auto i = 0; i < heaps.length; ++i)
 	{
 		heaps[i] = uniform(1,maxStones);
-		nimSum ^= heaps[i];
 	}
-	for(auto i = 0; i<3; ++i)
-	{
-		nimSum ^= 1 << uniform(0, countOfBits(maxStones));
-	}
-	while(!nimSum)
-	{
-		nimSum ^= 1 << uniform(0, countOfBits(maxStones));
-	}
-	heaps[$-1] = nimSum;
 	return heaps;
 }
 
@@ -111,24 +100,11 @@ void humanTurn(int[] heaps)
 
 void computerTurn(int[] heaps)
 {
-	auto nimSum = 0;
-	foreach(heap; heaps)
-		nimSum ^= heap;
-	if(nimSum)
-	{
-		auto index = 0;
-		while(heaps[index] <= (heaps[index] ^ nimSum))
-			++index;
-		heaps[index] ^= nimSum;
-	}
-	else
-	{
-		ulong index;
-		do{
-			index = uniform(0, heaps.length);
-		}while(!heaps[index]);
-		heaps[index] -= uniform!"[]"(1, heaps[index]);
-	}
+	ulong index;
+	do{
+		index = uniform(0, heaps.length);
+	}while(!heaps[index]);
+	heaps[index] -= uniform!"[]"(1, heaps[index]);
 }
 
 bool canTurn(int[] heaps)
@@ -137,15 +113,4 @@ bool canTurn(int[] heaps)
 		if(heap)
 			return true;
 	return false;
-}
-
-int countOfBits(int number)
-{
-	int count = 0, representation=1;
-	while(representation < number)
-	{
-		representation <<= 1;
-		++count;
-	}
-	return count;
 }
