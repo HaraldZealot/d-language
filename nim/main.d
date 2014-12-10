@@ -7,13 +7,12 @@ immutable int maxStones = 8;
 void main()
 {
 	try{
-
 		writeln("This is nim game.\n\nRULES:\nThere are some heaps. Each heap contain some stones.");
-		writeln("The two player take any possible amount (at least one)\nof stone per turn from any heaps.");
+		writeln("The two player take any possible amount (at least one)\n"
+				"of stone per turn from any heaps.");
 		writeln("Player who takes last stones on the tables win.");
 
-		writeln("\n\n\nLet start!"); 
-
+		writeln("\n\n\nLet start!");
 		auto heaps = generateHeaps(3);
 
 		auto turn = 0;// human
@@ -32,9 +31,9 @@ void main()
 			}
 			turn = 1 - turn;
 		}while(canTurn(heaps));
+
 		auto resultTitles = ["Human", "Computer"];
 		writefln("\n\n\n%s is win!!!\n%s is lost.", resultTitles[1-turn], resultTitles[turn]);
-
 	}
 	catch(Exception e)
 	{
@@ -85,7 +84,8 @@ void humanTurn(int[] heaps)
 			stderr.writeln("this heap is allready empty");
 	}while(index<0 || index>=heaps.length || !heaps[index]);
 
-	writefln("What count of stones will you take from '%c' heap?\n(Enter number between 1 and %d):", cast(char)(index+'A'), heaps[index]);
+	writefln("What count of stones will you take from '%c' heap?\n(Enter number between 1 and %d):", 
+	         cast(char)(index+'A'), heaps[index]);
 	int amount;
 	do
 	{
