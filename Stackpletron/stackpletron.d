@@ -105,6 +105,9 @@ struct Stackpletron
 					case OperationCode.MULTIPLY:
 						accumulatorRegister *= memory[addressRegister + biasRegister];
 						break;
+					case OperationCode.REMINDER:
+						accumulatorRegister %= memory[addressRegister + biasRegister];
+						break;
 					case OperationCode.LITERAL:
 						accumulatorRegister = addressRegister;
 						break;
@@ -140,7 +143,7 @@ struct Stackpletron
 		}catch(Throwable e)
 		{
 			writefln("An error \"%s\" has occured", e.msg);
-			printDump;
+			printDump();
 		}
 	}
 
@@ -172,9 +175,10 @@ private:
 
 		ADD = 30,
 		SUBSTRACT = 31,
-		DIVIDE = 32,
-		MULTIPLY = 33,
-		LITERAL = 34,
+		MULTIPLY = 32,
+		DIVIDE = 33,
+		REMINDER = 34,
+		LITERAL = 35,
 
 		BRANCH = 40,
 		BRANCHNEG = 41,

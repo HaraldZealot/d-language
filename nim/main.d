@@ -33,7 +33,8 @@ void main()
 		}while(canTurn(heaps));
 
 		auto resultTitles = ["Human", "Computer"];
-		writefln("\n\n\n%s is win!!!\n%s is lost.", resultTitles[1-turn], resultTitles[turn]);
+		writefln("\n\n\n%s is win!!!\n%s is lost.", 
+		         resultTitles[1-turn], resultTitles[turn]);
 	}
 	catch(Exception e)
 	{
