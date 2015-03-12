@@ -1,6 +1,7 @@
 ﻿module stackpletron;
 
 import std.stdio;
+import std.math;
 
 struct Stackpletron
 {
@@ -109,7 +110,10 @@ struct Stackpletron
 						accumulatorRegister %= memory[addressRegister + biasRegister];
 						break;
 					case OperationCode.LITERAL:
-						accumulatorRegister = addressRegister;
+						accumulatorRegister = abs(accumulatorRegister);
+						accumulatorRegister *= memorySize;
+						accumulatorRegister += abs(addressRegister);
+						accumulatorRegister *= addressRegister >0? 1: -1;
 						break;
 
 					case OperationCode.BRANCH:
@@ -148,7 +152,7 @@ struct Stackpletron
 	}
 
 
-	private void extract()pure nothrow @safe @nogc
+	private void extract()pure nothrow @safe
 	{
 		short currentCode = memory[instructionRegister];
 		if(currentCode < 0)
