@@ -1,6 +1,6 @@
 module arc;
 
-struct Arc
+final class Arc
 {
 	int output() const
 	{
