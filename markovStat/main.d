@@ -1,12 +1,15 @@
 ﻿module main;
 
-import std.stdio;
+import std.stdio, std.string;
 
 void main()
 {
 	uint[dchar][dchar] markovMatrix;
 	string text = "Просты прыклад тэкста. Занадта малы для апрацоўкі.";
 	dchar p = '\0';
+
+	text = toLower(text);
+
 	foreach(dchar c; text)
 	{
 		++markovMatrix[p][c];
