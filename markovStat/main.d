@@ -10,12 +10,15 @@ void main()
 
 	text = toLower(text);
 
-	auto re1 = ctRegex!(`[–.,:!?;*()0-9-]`);
+	auto re1 = ctRegex!(`[–.—,:!?;*()»«0-9-]`);
 	text = replaceAll(text, re1, " ");
 	auto re2 = ctRegex!(`\s+`);
 	text = replaceAll(text, re2, " ");
+	auto re3 = ctRegex!(`'`);
+	text = replaceAll(text, re3, `’`);
 
-	//writeln(text);
+	auto f = File("format.txt", "w");
+	f.write(text);
 
 	foreach(dchar c; text)
 	{
