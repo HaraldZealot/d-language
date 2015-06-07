@@ -57,5 +57,12 @@ void main()
 		}
 		writeln();
 	}
+
+	writeln();
+
+	foreach(dchar rowchar; alphabet)
+	{
+		write(sum(markovMatrix[rowchar].byKey), " ");
+	}
 }
 
