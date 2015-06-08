@@ -35,7 +35,7 @@ void main()
 
 	writeln("\n\n");
 
-	auto alphabet = "абвгдеёжзійклмнопрстуўфхцчш’ыьэюя ";
+	dstring alphabet = "абвгдеёжзійклмнопрстуўфхцчш’ыьэюя ";
 
 	write(" |");
 	foreach(dchar colchar; alphabet)
@@ -60,9 +60,55 @@ void main()
 
 	writeln();
 
+	dchar maxIndex = alphabet[0];
+	uint maxValue = sum(markovMatrix[maxIndex].byValue);
 	foreach(dchar rowchar; alphabet)
 	{
-		write(sum(markovMatrix[rowchar].byKey), " ");
+		auto curValue = sum(markovMatrix[rowchar].byValue);
+		if(curValue > maxValue)
+		{
+			maxValue = curValue;
+			maxIndex = rowchar;
+		}
 	}
+
+	writeln("'", maxIndex, "'");
+
+	bool[dchar] marks;
+	marks[maxIndex] = true;
+
+	dchar[] chain;
+	chain ~= maxIndex;
+
+	auto currentIndex = maxIndex;
+	while(markovMatrix[currentIndex].hasWayOut(marks))
+	{
+		maxIndex = '\0';
+		maxValue = 0;
+		foreach(i; markovMatrix[currentIndex].byKey)
+		{
+			//writeln(i, " ", maxValue, " ", markovMatrix[currentIndex][i]);
+			if(i !in marks && maxValue < markovMatrix[currentIndex][i])
+			{
+				maxIndex = i;
+				maxValue = markovMatrix[currentIndex][i];
+			}
+		}
+		assert(maxIndex != '\0');
+		chain ~= maxIndex;
+		marks[maxIndex] = true;
+		currentIndex = maxIndex;
+	}
+
+	writeln(chain);
+
+}
+
+bool hasWayOut(uint[dchar] markovRow, bool[dchar] marks)
+{
+	foreach(e; markovRow.byKey)
+		if(e !in marks)
+			return true;
+	return false;
 }
 
