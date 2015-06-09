@@ -102,6 +102,22 @@ void main()
 
 	writeln(chain);
 
+	foreach(dchar rowchar; chain)
+	{
+		write(rowchar,"|");
+		if(rowchar in markovMatrix)
+		{
+			foreach(dchar colchar; chain)
+			{
+				if(colchar in markovMatrix[rowchar])
+					writef("%3d|", markovMatrix[rowchar][colchar]);
+				else
+					write("   |");
+			}
+		}
+		writeln();
+	}
+
 }
 
 bool hasWayOut(uint[dchar] markovRow, bool[dchar] marks)
