@@ -1,0 +1,14 @@
+{
+	"name": "thrmch",
+	"description": "prototype machine for coDewife",
+	"authors": ["HaraldZealot"],
+	"copyright": "Copyright (c) 2015 Aliaksei Stankevich",
+	"configurations":[
+		{
+			"name": "standalone",
+			"targetType": "executable",
+			"targetPath": "build/app",
+			"workingDirectory": "build/app"
+		}
+	]
+}
