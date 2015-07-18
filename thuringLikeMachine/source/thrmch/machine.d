@@ -2,7 +2,7 @@ module thrmch.machine;
 
 import terms.common;
 
-struct Machine
+struct Tape
 {
 public:
 	void moveForward()
