@@ -90,4 +90,13 @@ private:
 
 	Node* stack;
 
+	struct BookmarkNode
+	{
+		Node* bookmark;
+
+		BookmarkNode* previous;
+	}
+
+	NodeLink* bookmarkStack;
+
 }
